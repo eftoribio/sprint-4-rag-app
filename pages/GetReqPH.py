@@ -18,7 +18,7 @@ from openai import OpenAI
 import pyperclip
 
 # api key
-api_key = open('openaiapikey.txt').read()
+api_key = st.secrets["api_key"]
 from openai import OpenAI
 client = OpenAI(api_key=api_key)
 SKLLMConfig.set_openai_key(api_key)
@@ -104,7 +104,7 @@ my_page = st.sidebar.radio('Page Navigation',
                            ['Chatbot', 'Explore'])
 
 if my_page == 'Chatbot':
-    st.title('GetReqPH')
+    st.title('📋 GetReqPH')
     
     WELCOME_MESSAGE = """
     Welcome to GetReqPH! I'm here to help you with information about Philippine government services.
@@ -138,22 +138,13 @@ if my_page == 'Chatbot':
         response = generate_conversational_response(prompt, collection)
         with st.chat_message('assistant'):
             st.markdown(response)
-            
-        # st.session_state.messages.append({"role": "assistant", "content": response})
-        # response_text_area = st.text_area("Assistant Response", value=response, height=100)
-        
-        # Add a button to copy the response
-            if st.button("📋 Copy Response"):
-                pyperclip.copy(response)
-                st.success("Response copied to clipboard!")
-        
+
         st.session_state.messages.append({"role": "assistant", "content": response})
 
 elif my_page == 'Explore':
-    st.title('Explore Articles')
+    st.title('📚 Explore Articles')
     df = pd.read_csv("PHGovInfo_categorized.csv")
 
-    
     # Define the options for agency and target_user
     agency_option = ['SSS',
         'GSIS',
