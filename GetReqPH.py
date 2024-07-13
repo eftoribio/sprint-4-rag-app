@@ -82,7 +82,7 @@ def generate_conversational_response(user_input, collection):
 
     assistant_response = response.choices[0].message.content
     
-    assistant_response += f"\n\nSources:\n{links_markdown}"
+    assistant_response += f"\n\nSources:  \n{links_markdown}"
 
     return assistant_response
 
