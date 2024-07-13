@@ -1,6 +1,4 @@
 import streamlit as st
-import json
-from nltk.tokenize import word_tokenize
 from dotenv import load_dotenv
 import openai
 import chromadb
@@ -15,7 +13,6 @@ from skllm.config import SKLLMConfig
 from skllm.models.gpt.text2text.summarization import GPTSummarizer
 from skllm.models.gpt.classification.zero_shot import ZeroShotGPTClassifier
 from openai import OpenAI
-import pyperclip
 
 # api key
 api_key = st.secrets["api_key"]

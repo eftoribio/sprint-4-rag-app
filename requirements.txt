@@ -78,7 +78,7 @@ nltk==3.8.1
 numpy==1.24.4
 oauthlib==3.2.2
 onnxruntime==1.18.1
-openai==0.28.0
+openai
 opentelemetry-api==1.25.0
 opentelemetry-exporter-otlp-proto-common==1.25.0
 opentelemetry-exporter-otlp-proto-grpc==1.25.0
@@ -138,11 +138,11 @@ tenacity==8.4.2
 threadpoolctl==3.5.0
 tokenizers==0.19.1
 tomli==2.0.1
-torch==2.3.1
+# torch==2.3.1
 tornado==6.4.1
 tqdm==4.66.4
 traitlets==5.14.3
-transformers==4.41.2
+# transformers==4.41.2
 typer==0.12.3
 typing_extensions==4.12.2
 tzdata==2024.1
