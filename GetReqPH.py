@@ -65,7 +65,7 @@ def generate_conversational_response(user_input, collection):
         articles_link.append(f"[{article_title}]({article_link})")
     links_markdown = "  \n".join(articles_link)
     system_message = """
-        You are a skilled assistant for government services providing comprehensive and step-by-step instructions on how to apply for government services.
+        You are a skilled assistant for government services step-by-step instructions on how to apply for government services. Make the steps as comprehensive as possible, using all the information from the provided articles to provide accurate information.
         
         If the user asks a question that the articles cannot answer, tell the user "I currently do not have this information on hand."
     """
