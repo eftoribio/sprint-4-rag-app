@@ -63,7 +63,7 @@ def generate_conversational_response(user_input, collection):
     for i, (article_title, article_document, article_link) in enumerate(relevant_articles, 1):
         articles_content += f"\n\nArticle {i}: {article_title}\n{article_document}\n{article_link}"
         articles_link.append(f"[{article_title}]({article_link})")
-    links_markdown = "\n".join(articles_link)
+    links_markdown = "  \n".join(articles_link)
     system_message = """
         You are a skilled assistant for government services providing comprehensive and step-by-step instructions on how to apply for government services.
         
