@@ -50,7 +50,7 @@ def generate_conversational_response(user_input, collection):
     # Initialize OpenAI client
      
     client = OpenAI(api_key=api_key)
-    
+
     relevant_articles = return_best_articles(user_input, collection, n_results=3)
     
     if not relevant_articles:
@@ -66,10 +66,6 @@ def generate_conversational_response(user_input, collection):
     links_markdown = "\n".join(articles_link)
     system_message = """
         You are a skilled assistant for government services providing comprehensive and step-by-step instructions on how to apply for government services.
-
-        If the user is asking information on a specific step, provide more relevant and helpful information.
-        
-        Tell the user you are only able to provide information on one service at a time.
         
         If the user asks a question that the articles cannot answer, tell the user "I currently do not have this information on hand."
     """
