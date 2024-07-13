@@ -148,7 +148,7 @@ if my_page == 'Chatbot':
 
 elif my_page == 'Explore':
     st.title('📚 Explore Articles')
-    df = pd.read_csv("PHGovInfo_categorized.csv")
+    df = pd.read_csv("data/PHGovInfo_categorized.csv")
 
     # Define the options for agency and target_user
     agency_option = ['SSS',
