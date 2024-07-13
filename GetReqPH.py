@@ -2,6 +2,9 @@ import streamlit as st
 from dotenv import load_dotenv
 import openai
 import chromadb
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 from chromadb.utils import embedding_functions
 import pandas as pd
 import matplotlib.pyplot as plt
