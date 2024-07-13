@@ -27,7 +27,7 @@ SKLLMConfig.set_openai_key(api_key)
 load_dotenv()
 openai.api_key = api_key # os.getenv('OPENAI_API_KEY')
 
-def return_best_articles(user_input, collection, n_results=3):
+def return_best_articles(user_input, collection, n_results=3, threshold=0.2):
     query_result = collection.query(query_texts=[user_input], n_results=n_results)
    
     if not query_result['ids'] or not query_result['ids'][0]:
@@ -36,27 +36,21 @@ def return_best_articles(user_input, collection, n_results=3):
 
     results = []
     for i in range(min(n_results, len(query_result['ids'][0]))):
-        result_id = query_result['ids'][0][i]
-        result_metadata = query_result['metadatas'][0][i]
-        result_document = query_result['documents'][0][i]
-        
-        print(f"\nArticle {i+1}:")
-        print("---------------")
-        print(f"Name: {result_metadata.get('article', 'Unknown Article')}")
-        print("\nArticle Body:")
-        print("-----------------")
-        print(result_document)
-        print("\nSteps:")
-        print("----------------")
-        
-        results.append((result_metadata.get('article', 'Unknown Article'), result_document))
-    
+        score = query_result['distances'][0][i]  # Assuming distances represent relevance scores
+        if score <= threshold:
+            result_id = query_result['ids'][0][i]
+            result_metadata = query_result['metadatas'][0][i]
+            result_document = query_result['documents'][0][i]
+            results.append((result_metadata.get('article', 'Unknown Article'), result_document, result_metadata.get('link', 'N/A')))
+
     return results
+
 
 def generate_conversational_response(user_input, collection):
     # Initialize OpenAI client
+     
     client = OpenAI(api_key=api_key)
-
+    
     relevant_articles = return_best_articles(user_input, collection, n_results=3)
     
     if not relevant_articles:
@@ -64,22 +58,37 @@ def generate_conversational_response(user_input, collection):
     
     # Prepare the content for the assistant message
     articles_content = ""
-    for i, (article_title, article_document) in enumerate(relevant_articles, 1):
-        articles_content += f"\n\nArticle {i}: {article_title}\n{article_document}"
+    articles_link = []
 
+    for i, (article_title, article_document, article_link) in enumerate(relevant_articles, 1):
+        articles_content += f"\n\nArticle {i}: {article_title}\n{article_document}\n{article_link}"
+        articles_link.append(f"[{article_title}]({article_link})")
+    links_markdown = "\n".join(articles_link)
+    system_message = """
+        You are a skilled assistant for government services providing comprehensive and step-by-step instructions on how to apply for government services.
+
+        If the user is asking information on a specific step, provide more relevant and helpful information.
+        
+        Tell the user you are only able to provide information on one service at a time.
+        
+        If the user asks a question that the articles cannot answer, tell the user "I currently do not have this information on hand."
+    """
     messages = [
-        {"role": "system", "content": "You are a skilled assistant for government services providing step-by-step instructions on how to apply for government services."},
+        {"role": "system", "content": system_message},
         {"role": "user", "content": user_input},
         {"role": "assistant", "content": f"I found the following relevant articles: {articles_content}\n\nBased on these articles, here's how I can help you:"}
     ]
     
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=messages,
-        max_tokens=500
+        messages=messages
     )
+
+    assistant_response = response.choices[0].message.content
     
-    return response.choices[0].message.content
+    assistant_response += f"\n\nSources:\n{links_markdown}"
+
+    return assistant_response
 
 ### CHROMADB
 
